@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCrew — Build the Future with AI</title>
+  <meta name="description"
+    content="CodeCrew designs AI applications, autonomous agents, business automation and modern software for startups and enterprises.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05070d;
+      --bg-1: #0a0e1a;
+      --bg-2: #0d1220;
+      --panel: rgba(255, 255, 255, 0.035);
+      --panel-border: rgba(255, 255, 255, 0.09);
+      --blue: #3b7bfd;
+      --purple: #8b5cf6;
+      --cyan: #22d3ee;
+      --text: #eef1f8;
+      --dim: #93a0bd;
+      --dimmer: #5c6787;
+      --radius: 16px;
+      --grad: linear-gradient(120deg, var(--blue), var(--purple) 55%, var(--cyan));
+      --serif-mono: 'JetBrains Mono', monospace;
+    }
+
+    :root.light {
+      --bg: #f5f6fb;
+      --bg-1: #ffffff;
+      --bg-2: #eef0fa;
+      --panel: rgba(10, 14, 30, 0.035);
+      --panel-border: rgba(10, 14, 30, 0.09);
+      --text: #0b0e1a;
+      --dim: #4a5273;
+      --dimmer: #7b849e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      transition: background .4s ease, color .4s ease;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .mono {
+      font-family: var(--serif-mono);
+    }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    @media(max-width:640px) {
+      .wrap {
+        padding: 0 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* background ambience */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .35;
+    }
+
+    .glow.g1 {
+      width: 520px;
+      height: 520px;
+      background: var(--blue);
+      top: -140px;
+      left: -120px;
+    }
+
+    .glow.g2 {
+      width: 600px;
+      height: 600px;
+      background: var(--purple);
+      top: 200px;
+      right: -200px;
+    }
+
+    .glow.g3 {
+      width: 420px;
+      height: 420px;
+      background: var(--cyan);
+      bottom: -160px;
+      left: 30%;
+    }
+
+    /* nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk';
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .logo .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--grad);
+      box-shadow: 0 0 16px var(--purple);
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 30px;
+      font-size: 14.5px;
+      color: var(--dim);
+    }
+
+    .navlinks a:hover {
+      color: var(--text);
+    }
+
+    .navcta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-size: 14.5px;
+      font-weight: 600;
+      border: 1px solid var(--panel-border);
+      cursor: pointer;
+      transition: all .25s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--grad);
+      color: #04060c;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, .35);
+    }
+
+    .btn-ghost {
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      background: color-mix(in srgb, var(--panel) 200%, transparent);
+      border-color: var(--purple);
+    }
+
+    .iconbtn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .navtoggle {
+      display: none;
+    }
+
+    @media(max-width:920px) {
+      .navlinks {
+        display: none;
+      }
+
+      .navtoggle {
+        display: flex;
+      }
+    }
+
+    /* hero */
+    .hero {
+      position: relative;
+      padding: 100px 0 70px;
+      z-index: 1;
+    }
+
+    #netCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: .55;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    @media(max-width:980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--serif-mono);
+      font-size: 12.5px;
+      color: var(--cyan);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      padding: 7px 14px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow .pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .3;
+      }
+    }
+
+    h1.headline {
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1.03;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    h1.headline .g {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sub {
+      font-size: 18px;
+      color: var(--dim);
+      max-width: 560px;
+      line-height: 1.65;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 34px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats div {}
+
+    .hero-stats b {
+      display: block;
+      font-family: 'Space Grotesk';
+      font-size: 26px;
+    }
+
+    .hero-stats span {
+      font-size: 12.5px;
+      color: var(--dimmer);
+      font-family: var(--serif-mono);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    /* signature console */
+    .console {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015));
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px -30px rgba(59, 123, 253, .25), 0 0 0 1px rgba(255, 255, 255, .02) inset;
+      backdrop-filter: blur(10px);
+    }
+
+    .console-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .console-bar span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .console-bar .r {
+      background: #ff5f57;
+    }
+
+    .console-bar .y {
+      background: #febc2e;
+    }
+
+    .console-bar .gdot {
+      background: #28c840;
+    }
+
+    .console-title {
+      margin-left: 8px;
+      font-family: var(--serif-mono);
+      font-size: 12px;
+      color: var(--dimmer);
+    }
+
+    .console-body {
+      padding: 20px 22px;
+      font-family: var(--serif-mono);
+      font-size: 13.5px;
+      line-height: 1.9;
+      min-height: 260px;
+    }
+
+    .console-body .line {
+      color: var(--dim);
+      white-space: pre-wrap;
+    }
+
+    .console-body .who {
+      color: var(--cyan);
+    }
+
+    .console-body .ok {
+      color: #4ade80;
+    }
+
+    .caret {
+      display: inline-block;
+      width: 7px;
+      background: var(--purple);
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* section headers */
+    .section {
+      padding: 100px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 56px;
+    }
+
+    .tag {
+      font-family: var(--serif-mono);
+      font-size: 12.5px;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .section-head h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      color: var(--dim);
+      font-size: 16.5px;
+      line-height: 1.6;
+    }
+
+    /* services tabs */
+    .tabbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 38px;
+    }
+
+    .tab {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--dim);
+      font-weight: 500;
+    }
+
+    .tab.active {
+      color: #04060c;
+      background: var(--grad);
+      border: none;
+    }
+
+    .tabpanel {
+      display: none;
+    }
+
+    .tabpanel.active {
+      display: block;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 14.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: .25s;
+    }
+
+    .chip:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+      background: color-mix(in srgb, var(--panel) 250%, transparent);
+    }
+
+    .chip .ico {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--grad);
+      flex-shrink: 0;
+    }
+
+    /* cards generic */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .grid-6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    @media(max-width:980px) {
+      .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media(max-width:640px) {
+
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .card {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, .4);
+      box-shadow: 0 20px 50px -24px rgba(59, 123, 253, .35);
+    }
+
+    .card h4 {
+      font-size: 17px;
+      margin: 12px 0 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--dim);
+      line-height: 1.55;
+    }
+
+    .card .num {
+      font-family: var(--serif-mono);
+      font-size: 12px;
+      color: var(--dimmer);
+    }
+
+    .iconwrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* industries */
+    .industry {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 22px 18px;
+      text-align: center;
+      transition: .25s;
+    }
+
+    .industry:hover {
+      border-color: var(--cyan);
+      transform: translateY(-3px);
+    }
+
+    .industry .emoji {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .industry span {
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    /* tech marquee */
+    .tech-cat {
+      margin-bottom: 34px;
+    }
+
+    .tech-cat h5 {
+      font-family: var(--serif-mono);
+      font-size: 12.5px;
+      color: var(--dimmer);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 14px;
+    }
+
+    .tech-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tech-pill {
+      padding: 9px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      font-size: 13.5px;
+      font-family: var(--serif-mono);
+    }
+
+    /* portfolio */
+    .pf-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 34px;
+    }
+
+    .pf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    @media(max-width:980px) {
+      .pf-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width:640px) {
+      .pf-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pf-card {
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--panel);
+      transition: .3s;
+      display: none;
+    }
+
+    .pf-card.show {
+      display: block;
+    }
+
+    .pf-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple);
+    }
+
+    .pf-card:hover .pf-thumb {
+      opacity: 1;
+    }
+
+    .pf-thumb {
+      height: 150px;
+      background: var(--grad);
+      opacity: .85;
+      position: relative;
+      transition: opacity .3s ease;
+    }
+
+    .pf-thumb::after {
+      content: attr(data-tag);
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-family: var(--serif-mono);
+      font-size: 11px;
+      background: rgba(0, 0, 0, .4);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .pf-body {
+      padding: 20px;
+    }
+
+    .pf-body h4 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .pf-body .client {
+      font-size: 12.5px;
+      color: var(--dimmer);
+      margin-bottom: 10px;
+    }
+
+    .pf-body .impact {
+      font-size: 13.5px;
+      color: var(--cyan);
+      margin-bottom: 14px;
+    }
+
+    .pf-tools {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pf-tools span {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .05);
+      color: var(--dim);
+      font-family: var(--serif-mono);
+    }
+
+    .pf-links {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+    }
+
+    .pf-links a {
+      color: var(--purple);
+    }
+
+    /* testimonials */
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media(max-width:980px) {
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stars {
+      color: #facc15;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .test-quote {
+      font-size: 14.5px;
+      color: var(--dim);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .test-who {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #04060c;
+    }
+
+    .test-who b {
+      font-size: 14px;
+      display: block;
+    }
+
+    .test-who span {
+      font-size: 12px;
+      color: var(--dimmer);
+    }
+
+    /* pricing */
+    .price-card {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 34px 28px;
+      position: relative;
+    }
+
+    .price-card.feat {
+      border-color: var(--purple);
+      background: linear-gradient(180deg, rgba(139, 92, 246, .09), rgba(59, 123, 253, .03));
+    }
+
+    .price-card .badge {
+      position: absolute;
+      top: -13px;
+      right: 24px;
+      background: var(--grad);
+      color: #04060c;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .price-card h4 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--dimmer);
+      font-family: var(--serif-mono);
+      margin-bottom: 10px;
+    }
+
+    .price-card .desc {
+      font-size: 14px;
+      color: var(--dim);
+      margin-bottom: 22px;
+    }
+
+    .price-card ul {
+      list-style: none;
+      margin: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .price-card li {
+      font-size: 13.5px;
+      color: var(--dim);
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .price-card li::before {
+      content: '✓';
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    /* contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+    }
+
+    @media(max-width:900px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--dim);
+      margin-bottom: 8px;
+      font-family: var(--serif-mono);
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 14.5px;
+      font-family: inherit;
+      outline: none;
+      transition: .2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, .15);
+    }
+
+    .field .err {
+      color: #f87171;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .field.invalid .err {
+      display: block;
+    }
+
+    .field.invalid input,
+    .field.invalid textarea {
+      border-color: #f87171;
+    }
+
+    .contact-info .row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .contact-info .row .ic {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-info b {
+      display: block;
+      font-size: 14.5px;
+    }
+
+    .contact-info span {
+      font-size: 13.5px;
+      color: var(--dim);
+    }
+
+    .map-box {
+      margin-top: 24px;
+      height: 160px;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      background:
+        repeating-linear-gradient(45deg, rgba(59, 123, 253, .06) 0 2px, transparent 2px 14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dimmer);
+      font-family: var(--serif-mono);
+      font-size: 12.5px;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* footer */
+    footer {
+      border-top: 1px solid var(--panel-border);
+      padding: 70px 0 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    @media(max-width:900px) {
+      .foot-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .foot-grid h5 {
+      font-size: 13px;
+      margin-bottom: 16px;
+      color: var(--dimmer);
+      font-family: var(--serif-mono);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .foot-grid ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .foot-grid a {
+      font-size: 14px;
+      color: var(--dim);
+    }
+
+    .foot-grid a:hover {
+      color: var(--cyan);
+    }
+
+    .newsletter {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .newsletter input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .foot-bottom {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 26px;
+      border-top: 1px solid var(--panel-border);
+      font-size: 13px;
+      color: var(--dimmer);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--grad);
+      color: #04060c;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+      z-index: 100;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    ::selection {
+      background: var(--purple);
+      color: #fff;
+    }
+
+    /* About section */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 50px;
+      align-items: flex-start;
+    }
+
+    .about-img-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+    }
+
+    .about-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform .5s ease;
+    }
+
+    .about-img-wrap:hover img {
+      transform: scale(1.03);
+    }
+
+    .about-content h3 {
+      font-size: clamp(24px, 3vw, 32px);
+      margin-bottom: 12px;
+    }
+
+    .about-content .title-desc {
+      font-size: 16px;
+      color: var(--cyan);
+      font-family: var(--serif-mono);
+      margin-bottom: 22px;
+    }
+
+    .about-content p {
+      font-size: 15px;
+      color: var(--dim);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .about-content ul.check-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+      margin-top: 24px;
+    }
+
+    .about-content ul.check-list li {
+      font-size: 14.5px;
+      color: var(--dim);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .about-content ul.check-list li::before {
+      content: '✓';
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .mission-quote {
+      border-left: 3px solid var(--purple);
+      padding-left: 20px;
+      margin: 28px 0;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    @media(max-width:880px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .about-content ul.check-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ambient">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
+
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="logo"><span class="dot"></span>CodeCrew</div>
+        <div class="navlinks">
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
+          <a href="#ai-agents">AI Solutions</a>
+          <a href="#portfolio">Portfolio</a>
+          <a href="#industries">Industries</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="navcta">
+          <div class="iconbtn" id="themeToggle" title="Toggle theme">🌙</div>
+          <a href="#contact" class="btn btn-ghost" style="display:none" id="loginPh"></a>
+          <a href="#contact" class="btn btn-primary">Book Free Consultation</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <canvas id="netCanvas"></canvas>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span>AI Engineer • Software Developer • Automation Expert</div>
+        <h1 class="headline" style="font-size: clamp(34px, 5.5vw, 60px);">Building <span class="g">Intelligent</span>
+          Digital Solutions with AI</h1>
+        <p class="sub">Hi, I'm VIKKY, Founder of CodeCrew. I help businesses build modern websites, AI-powered
+          applications, custom software, and intelligent automation systems that save time, reduce costs, and drive
+          growth.</p>
+        <div style="font-family: var(--serif-mono); font-size: 13.5px; color: var(--cyan); margin-bottom: 22px;">
+          4+ Years of Experience | AI Solutions | Full-Stack Development | Business Automation
+        </div>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">🚀 Start Your Project</a>
+          <a href="#contact" class="btn btn-ghost">📅 Book Free Consultation</a>
+          <a href="#portfolio" class="btn btn-ghost">💼 View My Portfolio</a>
+          <a href="#contact" class="btn btn-ghost">📩 Contact Me</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>4+</b><span>Years Experience</span></div>
+          <div><b>120+</b><span>Projects Shipped</span></div>
+          <div><b>38</b><span>AI Agents Deployed</span></div>
+          <div><b>24×7</b><span>Support Coverage</span></div>
+        </div>
+      </div>
+      <div class="console reveal">
+        <div class="console-bar">
+          <span class="r"></span><span class="y"></span><span class="gdot"></span>
+          <span class="console-title">agent-console — codecrew.ai</span>
+        </div>
+        <div class="console-body" id="consoleBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">What we build</span>
+        <h2>One crew, four disciplines</h2>
+        <p>From the website your customers see to the agents running quietly in the background — everything is designed,
+          built and shipped by the same team.</p>
+      </div>
+
+      <div class="tabbar reveal">
+        <div class="tab active" data-tab="web">Website Development</div>
+        <div class="tab" data-tab="ai">AI Applications</div>
+        <div class="tab" data-tab="soft">Software Development</div>
+        <div class="tab" data-tab="auto">Automation &amp; Agents</div>
+        <div class="tab" data-tab="research">Research Writing</div>
+      </div>
+
+      <div class="tabpanel active reveal" data-panel="web">
+        <div class="service-grid">
+          <div class="chip"><span class="ico"></span>Corporate Websites</div>
+          <div class="chip"><span class="ico"></span>Business Websites</div>
+          <div class="chip"><span class="ico"></span>Portfolio Websites</div>
+          <div class="chip"><span class="ico"></span>E-commerce Websites</div>
+          <div class="chip"><span class="ico"></span>SaaS Platforms</div>
+          <div class="chip"><span class="ico"></span>Landing Pages</div>
+          <div class="chip"><span class="ico"></span>Custom Web Applications</div>
+          <div class="chip"><span class="ico"></span>Admin Dashboards</div>
+          <div class="chip"><span class="ico"></span>CMS Solutions</div>
+          <div class="chip"><span class="ico"></span>Responsive Design</div>
+          <div class="chip"><span class="ico"></span>SEO Optimization</div>
+          <div class="chip"><span class="ico"></span>Lightning-Fast Performance</div>
+        </div>
+      </div>
+
+      <div class="tabpanel reveal" data-panel="ai">
+        <div class="service-grid">
+          <div class="chip"><span class="ico"></span>Custom AI Applications</div>
+          <div class="chip"><span class="ico"></span>ChatGPT Integration</div>
+          <div class="chip"><span class="ico"></span>AI Chatbots</div>
+          <div class="chip"><span class="ico"></span>AI Assistants</div>
+          <div class="chip"><span class="ico"></span>Recommendation Systems</div>
+          <div class="chip"><span class="ico"></span>Image Recognition</div>
+          <div class="chip"><span class="ico"></span>OCR</div>
+          <div class="chip"><span class="ico"></span>NLP Solutions</div>
+          <div class="chip"><span class="ico"></span>Voice AI</div>
+          <div class="chip"><span class="ico"></span>Computer Vision</div>
+          <div class="chip"><span class="ico"></span>Predictive Analytics</div>
+          <div class="chip"><span class="ico"></span>AI Dashboards</div>
+          <div class="chip"><span class="ico"></span>AI Search</div>
+          <div class="chip"><span class="ico"></span>Knowledge Base AI</div>
+          <div class="chip"><span class="ico"></span>Document AI</div>
+        </div>
+      </div>
+
+      <div class="tabpanel reveal" data-panel="soft">
+        <div class="service-grid">
+          <div class="chip"><span class="ico"></span>ERP</div>
+          <div class="chip"><span class="ico"></span>CRM</div>
+          <div class="chip"><span class="ico"></span>HRMS</div>
+          <div class="chip"><span class="ico"></span>Inventory Management</div>
+          <div class="chip"><span class="ico"></span>Billing Software</div>
+          <div class="chip"><span class="ico"></span>Hospital Management</div>
+          <div class="chip"><span class="ico"></span>School Management</div>
+          <div class="chip"><span class="ico"></span>Logistics Software</div>
+          <div class="chip"><span class="ico"></span>Manufacturing Software</div>
+          <div class="chip"><span class="ico"></span>Finance Software</div>
+          <div class="chip"><span class="ico"></span>Mobile Apps</div>
+          <div class="chip"><span class="ico"></span>Desktop Applications</div>
+          <div class="chip"><span class="ico"></span>Cloud Software</div>
+          <div class="chip"><span class="ico"></span>SaaS Products</div>
+        </div>
+      </div>
+
+      <div class="tabpanel reveal" data-panel="auto">
+        <div class="service-grid">
+          <div class="chip"><span class="ico"></span>AI Customer Support Agents</div>
+          <div class="chip"><span class="ico"></span>AI Sales Agents</div>
+          <div class="chip"><span class="ico"></span>AI HR Agents</div>
+          <div class="chip"><span class="ico"></span>AI Recruiter Agents</div>
+          <div class="chip"><span class="ico"></span>AI Email Agents</div>
+          <div class="chip"><span class="ico"></span>AI Voice Calling Agents</div>
+          <div class="chip"><span class="ico"></span>AI WhatsApp Agents</div>
+          <div class="chip"><span class="ico"></span>AI Appointment Booking</div>
+          <div class="chip"><span class="ico"></span>AI Lead Qualification</div>
+          <div class="chip"><span class="ico"></span>AI Data Entry Automation</div>
+          <div class="chip"><span class="ico"></span>Workflow Automation</div>
+          <div class="chip"><span class="ico"></span>Multi-Agent AI Systems</div>
+          <div class="chip"><span class="ico"></span>RAG Solutions</div>
+          <div class="chip"><span class="ico"></span>MCP Integration</div>
+          <div class="chip"><span class="ico"></span>LangGraph Agents</div>
+          <div class="chip"><span class="ico"></span>n8n Automation</div>
+          <div class="chip"><span class="ico"></span>CrewAI</div>
+          <div class="chip"><span class="ico"></span>OpenAI API Integration</div>
+          <div class="chip"><span class="ico"></span>Google Gemini Integration</div>
+          <div class="chip"><span class="ico"></span>Claude Integration</div>
+          <div class="chip"><span class="ico"></span>Llama Integration</div>
+        </div>
+      </div>
+
+      <div class="tabpanel reveal" data-panel="research">
+        <div class="service-grid">
+          <div class="chip"><span class="ico"></span>Research Paper Writing</div>
+          <div class="chip"><span class="ico"></span>Literature Review Synthesis</div>
+          <div class="chip"><span class="ico"></span>Thesis &amp; Dissertation Support</div>
+          <div class="chip"><span class="ico"></span>Academic Proofreading &amp; Editing</div>
+          <div class="chip"><span class="ico"></span>Statistical Data Analysis</div>
+          <div class="chip"><span class="ico"></span>Formatting (IEEE, APA, MLA, Harvard)</div>
+          <div class="chip"><span class="ico"></span>Plagiarism &amp; AI Detection Check</div>
+          <div class="chip"><span class="ico"></span>Journal Submission Preparation</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="ai-agents" style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Autonomous AI agents</span>
+        <h2>Agents that do the work, not just answer questions</h2>
+        <p>Every agent we ship is scoped to a real job in your business — qualifying a lead, closing a ticket, booking a
+          slot — and reports back in plain language.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal"><span class="num">01</span>
+          <div class="iconwrap">💬</div>
+          <h4>Support &amp; Sales Agents</h4>
+          <p>Handle tickets, qualify leads and answer product questions around the clock across chat, email and
+            WhatsApp.</p>
+        </div>
+        <div class="card reveal"><span class="num">02</span>
+          <div class="iconwrap">📞</div>
+          <h4>Voice &amp; Booking Agents</h4>
+          <p>Take calls, confirm appointments and sync straight into your calendar and CRM — no human dial-in required.
+          </p>
+        </div>
+        <div class="card reveal"><span class="num">03</span>
+          <div class="iconwrap">🧠</div>
+          <h4>Multi-Agent Systems</h4>
+          <p>LangGraph and CrewAI crews that plan, delegate and check each other's work on complex, multi-step tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="industries">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Where we operate</span>
+        <h2>Built for regulated, high-stakes, real-world industries</h2>
+        <p>The same rigor whether the system touches a patient record, a shipment, or a loan.</p>
+      </div>
+      <div class="grid-6">
+        <div class="industry reveal">
+          <div class="emoji">🏥</div><span>Healthcare</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">💳</div><span>Finance</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🎓</div><span>Education</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🏭</div><span>Manufacturing</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🛍️</div><span>Retail</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🚚</div><span>Logistics</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🏠</div><span>Real Estate</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🌾</div><span>Agriculture</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🛎️</div><span>Hospitality</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🛒</div><span>E-commerce</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">⚖️</div><span>Legal</span>
+        </div>
+        <div class="industry reveal">
+          <div class="emoji">🛡️</div><span>Insurance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="why">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Why CodeCrew</span>
+        <h2>Enterprise-grade delivery, startup-speed execution</h2>
+        <p>Every engagement is staffed by a dedicated crew, not a rotating pool of contractors.</p>
+      </div>
+      <div class="grid-4">
+        <div class="card reveal">
+          <h4>🧑‍💻 AI Experts</h4>
+          <p>Engineers who've shipped production LLM and CV systems, not just prototypes.</p>
+        </div>
+        <div class="card reveal">
+          <h4>⚡ Fast Delivery</h4>
+          <p>Working builds within the first sprint, weekly releases after that.</p>
+        </div>
+        <div class="card reveal">
+          <h4>🔒 Secure Solutions</h4>
+          <p>Encryption, access control and audit trails built in from day one.</p>
+        </div>
+        <div class="card reveal">
+          <h4>📈 Scalable Architecture</h4>
+          <p>Systems designed to hold up at 10x traffic without a rebuild.</p>
+        </div>
+        <div class="card reveal">
+          <h4>🏢 Enterprise Ready</h4>
+          <p>SSO, role-based access and compliance documentation on request.</p>
+        </div>
+        <div class="card reveal">
+          <h4>☁️ Cloud Native</h4>
+          <p>Containerized, infra-as-code, deployed across AWS, Azure or GCP.</p>
+        </div>
+        <div class="card reveal">
+          <h4>🕐 24×7 Support</h4>
+          <p>A monitored on-call rotation, not a ticket queue that goes quiet at 6pm.</p>
+        </div>
+        <div class="card reveal">
+          <h4>🎨 Modern UI/UX</h4>
+          <p>Interfaces designed to be used, not just demoed.</p>
+        </div>
+        <div class="card reveal">
+          <h4>💰 Affordable Pricing</h4>
+          <p>Transparent scopes and fixed-fee milestones — no surprise invoices.</p>
+        </div>
+        <div class="card reveal">
+          <h4>🤝 Dedicated Team</h4>
+          <p>The same engineers from kickoff through post-launch support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="section-head reveal"
+        style="text-align: center; margin-bottom: 70px; margin-left: auto; margin-right: auto;">
+        <span class="tag">Leadership Team</span>
+        <h2>Meet Our Founders</h2>
+        <p>The driving force behind CodeCrew — combining technical innovation with pedagogical excellence.</p>
+      </div>
+
+      <!-- Vikky Kumar Profile -->
+      <div class="about-grid" style="margin-bottom: 60px;">
+        <div class="about-img-wrap reveal">
+          <img src="images/VIKKY.png" alt="Vikky Kumar">
+        </div>
+        <div class="about-content reveal">
+          <span class="tag">Founder &amp; AI Engineer</span>
+          <h3>Mr. VIKKY</h3>
+          <div class="title-desc">AI Engineer | Software Developer | Founder of CodeCrew</div>
+          <p>I am a passionate AI Engineer and Software Developer with over 4 years of experience in Artificial
+            Intelligence, Machine Learning, Full-Stack Development, and Intelligent Automation.</p>
+          <p>I founded CodeCrew with a simple mission: <strong>Helping businesses leverage AI and modern software
+              solutions to automate work, improve efficiency, and accelerate growth.</strong></p>
+          <p>Throughout my journey, I have worked on AI-powered applications, intelligent automation systems, web
+            platforms, and custom software solutions that solve real business challenges.</p>
+          <p>My expertise includes building scalable AI products, developing enterprise-grade applications, and
+            integrating cutting-edge technologies such as Large Language Models (LLMs), AI Agents, Computer Vision, and
+            Workflow Automation.</p>
+
+          <div class="mission-quote">
+            "At CodeCrew, we believe technology should simplify business—not complicate it. Our goal is to help
+            startups, entrepreneurs, and enterprises transform their ideas into powerful digital products through AI,
+            automation, and modern software engineering."
+          </div>
+
+          <h4 style="margin-top: 30px; margin-bottom: 15px;">Why Work With Me?</h4>
+          <ul class="check-list">
+            <li>4+ Years of AI &amp; Software Development Experience</li>
+            <li>Modern Technology Stack</li>
+            <li>Business-Focused Solutions</li>
+            <li>Scalable Architecture</li>
+            <li>Fast Project Delivery</li>
+            <li>Clean &amp; Maintainable Code</li>
+            <li>End-to-End Development</li>
+            <li>Long-Term Technical Support</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Vikky's What I Do -->
+      <div style="margin-top: 30px; margin-bottom: 90px;">
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(59, 123, 253, 0.1); border: 1px solid var(--blue); color: var(--blue);">🌐</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Website Development</h4>
+            <p>Modern, responsive, SEO-friendly websites built using the latest technologies.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(139, 92, 246, 0.1); border: 1px solid var(--purple); color: var(--purple);">🤖
+            </div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">AI Applications</h4>
+            <p>Custom AI solutions powered by OpenAI, Gemini, Claude, Llama, LangChain, LangGraph, and more.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(34, 211, 238, 0.1); border: 1px solid var(--cyan); color: var(--cyan);">💻</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Software Development</h4>
+            <p>Secure, scalable web applications, SaaS platforms, CRM systems, ERP solutions, and business software.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(139, 92, 246, 0.1); border: 1px solid var(--purple); color: var(--purple);">⚡
+            </div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">AI Automation</h4>
+            <p>Automate repetitive business processes using AI Agents, Workflow Automation, RAG, APIs, and n8n.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(59, 123, 253, 0.1); border: 1px solid var(--blue); color: var(--blue);">📊</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Machine Learning</h4>
+            <p>Predictive analytics, recommendation systems, NLP, computer vision, and data-driven applications.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(34, 211, 238, 0.1); border: 1px solid var(--cyan); color: var(--cyan);">☁️</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Cloud &amp; Deployment</h4>
+            <p>Docker, AWS, Azure, DigitalOcean, CI/CD, scalable backend architecture, and production deployment.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid var(--panel-border); margin: 60px 0;">
+
+      <!-- Rahul Kumar Profile -->
+      <div class="about-grid" style="margin-bottom: 60px; margin-top: 60px;">
+        <div class="about-img-wrap reveal">
+          <img src="images/rahul_kumar.jpg" alt="Rahul Kumar">
+        </div>
+        <div class="about-content reveal">
+          <span class="tag">Co-Founder &amp; Tech Mentor</span>
+          <h3>Mr. Rahul Kumar</h3>
+          <div class="title-desc">Co-Founder | Senior Computer Science Educator | Technology Mentor</div>
+          <p>With over 15 years of teaching experience, Rahul Kumar has dedicated his career to empowering students
+            through quality education in Computer Science and emerging technologies.</p>
+          <p>As the Co-Founder of CodeCrew, he plays a key role in designing industry-focused learning programs and
+            mentoring aspiring software engineers, AI professionals, and technology enthusiasts.</p>
+          <p>Throughout his teaching journey, Rahul has successfully guided thousands of students in mastering core
+            computer science concepts while helping them build practical, job-ready skills.</p>
+          <p>His expertise spans both academic excellence and hands-on technical training, ensuring learners gain the
+            knowledge required to succeed in today's rapidly evolving technology landscape.</p>
+
+          <div class="mission-quote">
+            "Education is not just about learning technology—it's about developing the ability to solve real-world
+            problems through innovation and continuous learning. Combining strong theoretical foundations with practical
+            implementation is the key to building successful technology professionals."
+          </div>
+
+          <h4 style="margin-top: 30px; margin-bottom: 15px;">Commitment at CodeCrew:</h4>
+          <ul class="check-list">
+            <li>Delivering high-quality technical education</li>
+            <li>Mentoring future software and AI engineers</li>
+            <li>Building industry-oriented training programs</li>
+            <li>Promoting innovation through real-world projects</li>
+            <li>Bridging the gap between academics and industry</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Rahul's Areas of Expertise -->
+      <div style="margin-top: 30px;">
+
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(59, 123, 253, 0.1); border: 1px solid var(--blue); color: var(--blue);">📚</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">CS Fundamentals</h4>
+            <p>Deep expertise in Computer Science Fundamentals, Database Systems, Operating Systems, and Networks.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(139, 92, 246, 0.1); border: 1px solid var(--purple); color: var(--purple);">⛓️
+            </div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Data Structures &amp; Algorithms</h4>
+            <p>Strong algorithmic skills, analysis of complexity, and structured problem-solving foundations.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(34, 211, 238, 0.1); border: 1px solid var(--cyan); color: var(--cyan);">💻</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Core Programming</h4>
+            <p>Fluent and professional coding paradigms in low and high-level languages: C, C++, Java, and Python.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(139, 92, 246, 0.1); border: 1px solid var(--purple); color: var(--purple);">🤖
+            </div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">AI &amp; Machine Learning</h4>
+            <p>Curriculum design and mentorship on modern Machine Learning and Artificial Intelligence models.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(59, 123, 253, 0.1); border: 1px solid var(--blue); color: var(--blue);">⚙️</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Software Engineering</h4>
+            <p>Teaching methodologies, SDLC lifecycles, structural code documentation, and design patterns.</p>
+          </div>
+          <div class="card reveal">
+            <div class="iconwrap"
+              style="background: rgba(34, 211, 238, 0.1); border: 1px solid var(--cyan); color: var(--cyan);">🎓</div>
+            <h4 style="margin-top: 15px; margin-bottom: 8px;">Career Mentorship</h4>
+            <p>15+ years of career guidance, technical mentoring, and preparing students for top tech industries.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tech">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Under the hood</span>
+        <h2>The stack we build on</h2>
+        <p>No black boxes — every project is documented and handed over with full source access.</p>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>Programming Languages</h5>
+        <div class="tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">JavaScript</span><span
+            class="tech-pill">TypeScript</span><span class="tech-pill">SQL</span>
+        </div>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>Frontend</h5>
+        <div class="tech-row">
+          <span class="tech-pill">React</span><span class="tech-pill">Next.js</span><span
+            class="tech-pill">HTML5</span><span class="tech-pill">CSS3</span><span class="tech-pill">Tailwind CSS</span>
+        </div>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>Backend</h5>
+        <div class="tech-row">
+          <span class="tech-pill">FastAPI</span><span class="tech-pill">Node.js</span><span
+            class="tech-pill">Express</span>
+        </div>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>AI &amp; Machine Learning</h5>
+        <div class="tech-row">
+          <span class="tech-pill">OpenAI</span><span class="tech-pill">LangChain</span><span
+            class="tech-pill">LangGraph</span><span class="tech-pill">Llama</span><span class="tech-pill">Hugging
+            Face</span><span class="tech-pill">TensorFlow</span><span class="tech-pill">PyTorch</span><span
+            class="tech-pill">Scikit-learn</span>
+        </div>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>Database</h5>
+        <div class="tech-row">
+          <span class="tech-pill">PostgreSQL</span><span class="tech-pill">MySQL</span><span
+            class="tech-pill">MongoDB</span>
+        </div>
+      </div>
+      <div class="tech-cat reveal">
+        <h5>Cloud &amp; DevOps</h5>
+        <div class="tech-row">
+          <span class="tech-pill">Docker</span><span class="tech-pill">GitHub</span><span
+            class="tech-pill">AWS</span><span class="tech-pill">Azure</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="portfolio">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Selected work</span>
+        <h2>Recent builds</h2>
+        <p>A sample of what shipped in the last few quarters.</p>
+      </div>
+      <div class="pf-filters reveal">
+        <div class="tab active" data-filter="all">All</div>
+        <div class="tab" data-filter="ai">AI</div>
+        <div class="tab" data-filter="web">Websites</div>
+        <div class="tab" data-filter="soft">Software</div>
+        <div class="tab" data-filter="mobile">Mobile Apps</div>
+        <div class="tab" data-filter="auto">Automation</div>
+        <div class="tab" data-filter="saas">SaaS</div>
+      </div>
+      <div class="pf-grid" id="pfGrid">
+        <div class="pf-card show reveal" data-cat="ai">
+          <div class="pf-thumb" data-tag="AI"
+            style="background-image: url('images/clinical_document_ai.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>Clinical Document AI</h4>
+            <div class="client">Client: Regional Hospital Network</div>
+            <div class="impact">↓ 62% chart processing time</div>
+            <div class="pf-tools"><span>Python</span><span>OCR</span><span>FastAPI</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+        <div class="pf-card show reveal" data-cat="web">
+          <div class="pf-thumb" data-tag="Website"
+            style="background-image: url('images/fintech_marketing.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>Fintech Marketing Site</h4>
+            <div class="client">Client: PayStream</div>
+            <div class="impact">↑ 3.1x demo signups</div>
+            <div class="pf-tools"><span>Next.js</span><span>Tailwind</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+        <div class="pf-card show reveal" data-cat="soft">
+          <div class="pf-thumb" data-tag="Software"
+            style="background-image: url('images/warehouse_erp.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>Warehouse ERP</h4>
+            <div class="client">Client: Meridian Logistics</div>
+            <div class="impact">↓ 40% stock discrepancies</div>
+            <div class="pf-tools"><span>Java</span><span>PostgreSQL</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+        <div class="pf-card show reveal" data-cat="mobile">
+          <div class="pf-thumb" data-tag="Mobile"
+            style="background-image: url('images/field_service.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>Field Service App</h4>
+            <div class="client">Client: Atlas Utilities</div>
+            <div class="impact">↑ 28% jobs per technician</div>
+            <div class="pf-tools"><span>React Native</span><span>Node.js</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+        <div class="pf-card show reveal" data-cat="auto">
+          <div class="pf-thumb" data-tag="Automation"
+            style="background-image: url('images/ai_sales_agent.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>AI Sales Agent Fleet</h4>
+            <div class="client">Client: Northline SaaS</div>
+            <div class="impact">↑ 45% qualified pipeline</div>
+            <div class="pf-tools"><span>LangGraph</span><span>CrewAI</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+        <div class="pf-card show reveal" data-cat="saas">
+          <div class="pf-thumb" data-tag="SaaS"
+            style="background-image: url('images/booking_saas.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="pf-body">
+            <h4>Multi-Tenant Booking SaaS</h4>
+            <div class="client">Client: Bookr</div>
+            <div class="impact">14k+ active accounts</div>
+            <div class="pf-tools"><span>Next.js</span><span>Stripe</span></div>
+            <div class="pf-links"><a href="#">Live Demo</a><a href="#">Case Study</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">In their words</span>
+        <h2>Teams we've worked with</h2>
+      </div>
+      <div class="test-grid">
+        <div class="card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="test-quote">"CodeCrew's support agent cut our first-response time from hours to seconds, and our
+            team still handles every escalation personally."</p>
+          <div class="test-who">
+            <div class="avatar">R</div>
+            <div><b>Rhea Kapoor</b><span>Head of CX, Northline SaaS</span></div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="test-quote">"They rebuilt our warehouse system in eight weeks and it hasn't gone down once. Actual
+            engineers, not a template shop."</p>
+          <div class="test-who">
+            <div class="avatar">D</div>
+            <div><b>David Okafor</b><span>COO, Meridian Logistics</span></div>
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="test-quote">"The document AI pipeline is now processing thousands of charts a week with a fraction
+            of the manual review we used to need."</p>
+          <div class="test-who">
+            <div class="avatar">S</div>
+            <div><b>Sarah Lin</b><span>Director of IT, Regional Hospital Network</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Pricing</span>
+        <h2>Straightforward plans, scoped to you</h2>
+        <p>Every engagement gets a fixed-fee quote after a short discovery call.</p>
+      </div>
+      <div class="grid-3">
+        <div class="price-card reveal">
+          <h4>Starter</h4>
+          <p class="desc">For startups shipping their first product.</p>
+          <ul>
+            <li>One website or MVP application</li>
+            <li>Up to 2 integrations</li>
+            <li>4-week delivery window</li>
+            <li>30 days of post-launch support</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost" style="width:100%; justify-content:center;">Get Quote</a>
+        </div>
+        <div class="price-card feat reveal">
+          <span class="badge">Most Popular</span>
+          <h4>Professional</h4>
+          <p class="desc">For growing businesses adding AI and automation.</p>
+          <ul>
+            <li>Full web or software platform</li>
+            <li>1-2 AI agents or automations</li>
+            <li>Dedicated project lead</li>
+            <li>90 days of post-launch support</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary" style="width:100%; justify-content:center;">Get Quote</a>
+        </div>
+        <div class="price-card reveal">
+          <h4>Enterprise</h4>
+          <p class="desc">For large organizations with compliance needs.</p>
+          <ul>
+            <li>Multi-system architecture</li>
+            <li>Multi-agent AI deployments</li>
+            <li>SSO, audit logs, custom SLAs</li>
+            <li>Ongoing dedicated crew</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost" style="width:100%; justify-content:center;">Get Quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="tag">Get in touch</span>
+        <h2>Tell us what you're building</h2>
+        <p>Book a free consultation or send a message — we reply within one business day.</p>
+      </div>
+      <div class="contact-grid">
+        <form class="reveal" id="contactForm" novalidate>
+          <div class="field" id="f-name">
+            <label>Full name</label>
+            <input type="text" name="name" placeholder="Jane Doe">
+            <div class="err">Please enter your name.</div>
+          </div>
+          <div class="field" id="f-email">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="jane@company.com">
+            <div class="err">Please enter a valid email.</div>
+          </div>
+          <div class="field" id="f-message">
+            <label>Project details</label>
+            <textarea name="message" rows="5" placeholder="Tell us about your idea..."></textarea>
+            <div class="err">Please share a few details about your project.</div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send
+            Message</button>
+        </form>
+        <div class="contact-info reveal">
+          <div class="row">
+            <div class="ic">✉️</div>
+            <div><b>Email</b><span>vikky.code@gmail.com</span></div>
+          </div>
+          <div class="row">
+            <div class="ic">📱</div>
+            <div><b>Phone</b><span>+91 8869087750</span></div>
+          </div>
+          <div class="row">
+            <div class="ic">💬</div>
+            <div><b>WhatsApp</b><span>+91 8869087750</span></div>
+          </div>
+          <div class="map-box">Map preview — embed your Google Maps location here</div>
+          <div class="social-row">
+            <div class="iconbtn">in</div>
+            <div class="iconbtn">𝕏</div>
+            <div class="iconbtn">gh</div>
+            <div class="iconbtn">yt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="logo"><span class="dot"></span>CodeCrew</div>
+          <p style="color:var(--dim); font-size:14px; margin-top:14px; max-width:280px; line-height:1.6;">Transforming
+            businesses with AI, automation and modern software solutions.</p>
+          <div class="newsletter">
+            <input type="email" placeholder="Your email">
+            <button class="btn btn-primary" id="subBtn" style="padding:10px 16px;">Join</button>
+          </div>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#services">Website Development</a></li>
+            <li><a href="#services">AI Applications</a></li>
+            <li><a href="#services">Software Development</a></li>
+            <li><a href="#ai-agents">AI Agents &amp; Automation</a></li>
+            <li><a href="#services">Research Writing Services</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="#portfolio">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#industries">Industries</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Book a Consultation</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 CodeCrew. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast"></div>
+
+  <script>
+    // theme toggle
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', () => {
+      root.classList.toggle('light');
+      themeBtn.textContent = root.classList.contains('light') ? '☀️' : '🌙';
+    });
+
+    // reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // service tabs
+    document.querySelectorAll('.tabbar .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tabbar .tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+        document.querySelector('.tabpanel[data-panel="' + tab.dataset.tab + '"]').classList.add('active');
+      });
+    });
+
+    // portfolio filters
+    document.querySelectorAll('.pf-filters .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.pf-filters .tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const f = tab.dataset.filter;
+        document.querySelectorAll('.pf-card').forEach(card => {
+          card.classList.toggle('show', f === 'all' || card.dataset.cat === f);
+        });
+      });
+    });
+
+    // contact form validation
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      document.getElementById('f-name').classList.toggle('invalid', name.length < 2);
+      document.getElementById('f-email').classList.toggle('invalid', !emailRe.test(email));
+      document.getElementById('f-message').classList.toggle('invalid', message.length < 10);
+
+      if (name.length < 2 || !emailRe.test(email) || message.length < 10) { valid = false; }
+
+      if (valid) {
+        showToast('Message sent — we will reply within one business day.');
+        form.reset();
+      }
+    });
+    document.getElementById('subBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Subscribed to the CodeCrew newsletter.');
+    });
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    // signature: simulated agent console typing
+    const consoleBody = document.getElementById('consoleBody');
+    const script = [
+      { who: 'you', text: 'deploy support-agent --channel whatsapp' },
+      { who: 'sys', text: 'Provisioning agent... connecting to WhatsApp Business API' },
+      { who: 'ok', text: '✓ Agent online — listening for messages' },
+      { who: 'sys', text: 'Incoming: "Do you ship to Canada?"' },
+      { who: 'ok', text: '✓ Answered in 0.8s using knowledge base' },
+      { who: 'sys', text: 'Incoming: "I want to book a demo for Thursday"' },
+      { who: 'ok', text: '✓ Slot booked — synced to Google Calendar & CRM' },
+      { who: 'sys', text: 'Handoff: 1 complex query escalated to human' },
+      { who: 'ok', text: '✓ 47 conversations resolved today, 0 missed' },
+    ];
+    let li = 0;
+    function typeLine() {
+      if (li >= script.length) { setTimeout(() => { consoleBody.innerHTML = ''; li = 0; typeLine(); }, 2200); return; }
+      const item = script[li];
+      const prefix = item.who === 'you' ? '<span class="who">$ </span>' : (item.who === 'ok' ? '<span class="ok">→ </span>' : '<span style="color:var(--dimmer)">· </span>');
+      const div = document.createElement('div');
+      div.className = 'line';
+      div.innerHTML = prefix;
+      consoleBody.appendChild(div);
+      let i = 0;
+      const speed = 18;
+      function type() {
+        if (i <= item.text.length) {
+          div.innerHTML = prefix + item.text.slice(0, i) + '<span class="caret">&nbsp;</span>';
+          i++;
+          setTimeout(type, speed);
+        } else {
+          div.innerHTML = prefix + item.text;
+          li++;
+          setTimeout(typeLine, 420);
+        }
+      }
+      type();
+    }
+    typeLine();
+
+    // signature: neural network canvas in hero
+    const canvas = document.getElementById('netCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, nodes = [];
+    function resize() {
+      const hero = document.querySelector('.hero');
+      w = canvas.width = hero.offsetWidth;
+      h = canvas.height = hero.offsetHeight;
+    }
+    function initNodes() {
+      const count = Math.min(60, Math.floor(w / 28));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35
+      }));
+    }
+    const colors = ['59,123,253', '139,92,246', '34,211,238'];
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d < 140) {
+            ctx.strokeStyle = 'rgba(139,92,246,' + (0.16 * (1 - d / 140)) + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach((n, idx) => {
+        ctx.fillStyle = 'rgba(' + colors[idx % 3] + ',0.8)';
+        ctx.beginPath(); ctx.arc(n.x, n.y, 2, 0, Math.PI * 2); ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    resize(); initNodes(); draw();
+    window.addEventListener('resize', () => { resize(); initNodes(); });
+  </script>
+</body>
+
+</html>
